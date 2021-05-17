@@ -6,11 +6,21 @@ const PORT = 4000;
 // express function을 사용하면 express application을 생성해줌
 const app = express();
 
+const handleHome = () => console.log("Somebody is trying to go home.")
+
+// get의 뜻: 저 페이지를 갖다줘(Get me that page) 할때의 get
+// get request: 뭔가("/", "/login", "/profile" 등등...)를 '가져달라'는 request
+// get request에는 route가 있다. route는 목적지임. 어디로 가는지, 어디로 가려하는지.
+// 브라우저가 우리 서버에게 root("/")페이지의 URL이 필요하다고 get request를 보냄
+// 브라우저가 get request를 보내면 get의 두번째 인자인 콜백함수를 실행
+app.get("/", handleHome)
+
 const handleListening = () =>
   console.log(`✅ Server listening on port http://localhost:${PORT} 🚀`);
 
 // 서버는 24시간 내내 온라인에 연결된 컴퓨터이다.
 // 서버는 request를 listening하고 있다. request를 듣고 답하는 것이다.
+// request는 유저가 뭔가를 요청하거나, 보내거나, 어떤 행동을 하는 것.
 // request는 서버와 상호작용 하는 모든 일(페이지 접속, 카톡 메시지 전송, 유튜브 접속, 영상 클릭, 재생 클릭 등...)을 말한다. 서버는 그걸 listen하는 거임.
 // 서버는 유저의 행동을 24시간 listening하고 있다. 기다리고 있다.
 // 서버가 유저들이 뭔가를 요청할 때까지 기다리게 해야한다.

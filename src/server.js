@@ -6,14 +6,28 @@ const PORT = 4000;
 // express function을 사용하면 express application을 생성해줌
 const app = express();
 
-const handleHome = () => console.log("Somebody is trying to go home.")
+// Route handler는 자동으로 Express로부터 request object, response object를 받음.
+// req, res 둘다 받음. (req)나 (res)처럼 하나만 받는건 안됨.
+// addEventListener의 콜백함수가 자동으로 event를 갖는것처럼. 법칙임.
+// request는 브라우저가 뭔가를 요청한다는거고, 쿠키나 method, URL같은 정보를 얻을 수 있다.
+const handleHome = (req, res) => {
+  // 브라우저가 request(root("/")페이지를 가져달라는)를 보내면, 서버는 응답을 해야한다.
+  // request를 받았으면 response를 return해야지.
+  // I still love you.라는 글자를 response로써 send보냄
+  return res.send("I still love you.");
+};
 
-// get의 뜻: 저 페이지를 갖다줘(Get me that page) 할때의 get
+const handleLogin = (req, res) => {
+  return res.send("Login here.");
+};
+
+// get method의 뜻: 저 페이지를 갖다줘(Get me that page) 할때의 get
 // get request: 뭔가("/", "/login", "/profile" 등등...)를 '가져달라'는 request
 // get request에는 route가 있다. route는 목적지임. 어디로 가는지, 어디로 가려하는지.
 // 브라우저가 우리 서버에게 root("/")페이지의 URL이 필요하다고 get request를 보냄
 // 브라우저가 get request를 보내면 get의 두번째 인자인 콜백함수를 실행
-app.get("/", handleHome)
+app.get("/", handleHome); // Route
+app.get("/login", handleLogin); // Route
 
 const handleListening = () =>
   console.log(`✅ Server listening on port http://localhost:${PORT} 🚀`);

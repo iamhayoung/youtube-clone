@@ -11,12 +11,25 @@ const app = express();
 // middleware는 request에 응답하지 않는다. request를 지속시켜준다.
 // middleware는 작업을 다음 함수에게 넘기는 함수이다. 응답하는 함수가 아니다.
 // 이 middleware는 사람들이 우리 웹사이트의 어디를 가려는지 말해줄것이다
-const gossipMiddleware = (req, res, next) => {
-  console.log(`Someone is going to: ${req.url}`);
+const logger = (req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
   next(); // middleware가 next()를 호출하면 express가 get()의 세번째인자인 함수를 호출해줌
 };
 
-// Route handler=controller는 자동으로 Express로부터 request object, response object, next() argument를 받음.
+const privateMiddleware = (req, res, next) => {
+  // req object로부터 url 정보를 받아서
+  const url = req.url;
+  if (url === "/protected") {
+    // url이 /protected와 같을때
+    // middleware가 뭔가를 return하면 middleware가 거기서 response를 중단시켜서 종료되게 됨.
+    // 중간에 개입해서 next()를 호출하는 것을 막음
+    return res.send("<h1>Not Allowed</h1>")
+  }
+  console.log("Allowed, you may continue.")
+  next(); // url이 /protected가 아니라면 next()함수 호출
+};
+
+// 모든 Route handler=controller는 자동으로 Express로부터 request object, response object, next() argument를 받음.
 // req, res 반드시 둘다 같이 받아야함. (req)나 (res)처럼 하나만 받는건 안됨. next는 필수아님
 // addEventListener의 콜백함수가 자동으로 event를 갖는것처럼. 법칙임.
 // next() argument는 다음 함수를 호출해준다.
@@ -29,18 +42,31 @@ const handleHome = (req, res) => {
   return res.send("I love middlewares");
 };
 
+const handleProtected = (req, res) => {
+  return res.send("Welcome to the private lounge")
+}
+
+// use()는 global middleware를 만들수있게 해준다. 어느 route(URL)에서도 작동하는 middleware.
+// 실행순서가 중요함. express는 모든걸 js처럼 위에서 아래순으로 실행시킴.
+// middleware를 use하는게 먼저오고, 그다음에 get()이 와야함
+// 모든 route에서 use(함수)를 사용할수있게됨
+// middleware를 use()를 이용하여 위에다 두면 모든 route에서 적용됨
+app.use(logger);
+app.use(privateMiddleware);
+
 // get method의 뜻: 저 페이지를 갖다줘(Get me that page) 할때의 get
 // get request: 뭔가("/", "/login", "/profile" 등등...)를 '가져달라'는 request
 // get request에는 route가 있다. route는 목적지임. 어디로 가는지, 어디로 가려하는지.
 // 브라우저가 우리 서버에게 root("/")페이지의 URL이 필요하다고 get request를 보냄
-// 그럼 express가 middleware인 두번쨰 인자 함수를 호출 (생략가능)
+// 그럼 express가 두번쨰 인자인 middleware 함수를 호출 (생략가능)
 // 브라우저가 get request를 보내면 get의 세번째 인자인 콜백함수인 handler=controller를 실행
 // middleware: middle software. 중간에 있는 소프트웨어. middleware는 브라우저가 request한 다음, 서버가 response하기 전. 그 사이에 middleware가 있다
 // middleware는 request에 응답하지 않는다. request를 지속시켜준다.
 // 모든 middleware는 handler=controller고, 모든 handler=controller는 middleware이다.
 // 즉 모든 controller는 middleware가 될 수 있다. middleware함수에서 next()함수를 호출한다면, 그 함수는 middleware라는걸 의미한다
 // get의 세번째인자함수는 middleware실행 뒤에 실행되는 finalware이다
-app.get("/", gossipMiddleware, handleHome); // Route. Route란 handler=controller로 URL을 정돈하는 것
+app.get("/", handleHome); // Route. Route란 handler=controller로 URL을 정돈하는 것
+app.get("/protected", handleProtected);
 
 const handleListening = () =>
   console.log(`✅ Server listening on port http://localhost:${PORT} 🚀`);

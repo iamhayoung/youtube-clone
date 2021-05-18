@@ -3,6 +3,7 @@ import express from "express";
 const PORT = 4000;
 
 // app이라는 이름의 express 앱 생성
+// express로 app이라는 이름의 서버를 만든것임
 // express function을 사용하면 express application을 생성해줌
 const app = express();
 
@@ -55,8 +56,10 @@ app.use(logger);
 app.use(privateMiddleware);
 
 // get method의 뜻: 저 페이지를 갖다줘(Get me that page) 할때의 get
+// 브라우저에게 누군가 홈페이지를 get하려고 할때 어떻게 반응할지 알려주는것
 // get request: 뭔가("/", "/login", "/profile" 등등...)를 '가져달라'는 request
 // get request에는 route가 있다. route는 목적지임. 어디로 가는지, 어디로 가려하는지.
+// URL=routes을 통해서 request를 전달하는것임
 // 브라우저가 우리 서버에게 root("/")페이지의 URL이 필요하다고 get request를 보냄
 // 그럼 express가 두번쨰 인자인 middleware 함수를 호출 (생략가능)
 // 브라우저가 get request를 보내면 get의 세번째 인자인 콜백함수인 handler=controller를 실행
@@ -78,5 +81,7 @@ const handleListening = () =>
 // 서버는 유저의 행동을 24시간 listening하고 있다. 기다리고 있다.
 // 서버가 유저들이 뭔가를 요청할 때까지 기다리게 해야한다. 그래서 listen()을 사용함
 // listen의 첫번째 인자: port. port는 컴퓨터의 문이나 창문과 같은 것. 서버에게 어떤 port를 listening할 지 알려줘야함.
+// app이라는 서버는 4000번 포트만 listening하고 있다는 뜻.
+// 서버는 내 컴퓨터 전체를 listening할 수 없다. port가 있어야함. 컴퓨터에는 많은 port들이 있는데 다수가 개방되어 있고 많은 프로그램들이 그 안에서 소통하고 있다. 브라우저가 request를 보낼때 해당 port로 request를 보내는것이다
 // listen의 두번째 인자: 콜백함수. 서버가 시작될 때 작동하는 함수.
 app.listen(PORT, handleListening);

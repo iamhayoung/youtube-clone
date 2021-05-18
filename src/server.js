@@ -6,29 +6,41 @@ const PORT = 4000;
 // express function을 사용하면 express application을 생성해줌
 const app = express();
 
-// Route handler는 자동으로 Express로부터 request object, response object를 받음.
-// req, res 둘다 받음. (req)나 (res)처럼 하나만 받는건 안됨.
+// middleware는 request, response, next가 필요함
+// middleware함수에서 next()함수를 호출한다면, 그 함수는 middleware라는걸 의미한다
+// middleware는 request에 응답하지 않는다. request를 지속시켜준다.
+// middleware는 작업을 다음 함수에게 넘기는 함수이다. 응답하는 함수가 아니다.
+// 이 middleware는 사람들이 우리 웹사이트의 어디를 가려는지 말해줄것이다
+const gossipMiddleware = (req, res, next) => {
+  console.log(`Someone is going to: ${req.url}`);
+  next(); // middleware가 next()를 호출하면 express가 get()의 세번째인자인 함수를 호출해줌
+};
+
+// Route handler=controller는 자동으로 Express로부터 request object, response object, next() argument를 받음.
+// req, res 반드시 둘다 같이 받아야함. (req)나 (res)처럼 하나만 받는건 안됨. next는 필수아님
 // addEventListener의 콜백함수가 자동으로 event를 갖는것처럼. 법칙임.
+// next() argument는 다음 함수를 호출해준다.
 // request는 브라우저가 뭔가를 요청한다는거고, 쿠키나 method, URL같은 정보를 얻을 수 있다.
 const handleHome = (req, res) => {
   // 브라우저가 request(root("/")페이지를 가져달라는)를 보내면, 서버는 응답을 해야한다. 응답해주는건 필수임
   // 응답해주지 않으면 브라우저는 계속 기다리기만 함(loading). 심지어 포기하기도 함(그래서 브라우저에 응답이 없습니다라는 까만 화면이 뜸)
   // request를 받았으면 response를 return해야지.
   // I still love you.라는 글자를 response로써 send보냄
-  return res.send("<h1>I still love you.</h1>");
-};
-
-const handleLogin = (req, res) => {
-  return res.send({ message: "Login here."});
+  return res.send("I love middlewares");
 };
 
 // get method의 뜻: 저 페이지를 갖다줘(Get me that page) 할때의 get
 // get request: 뭔가("/", "/login", "/profile" 등등...)를 '가져달라'는 request
 // get request에는 route가 있다. route는 목적지임. 어디로 가는지, 어디로 가려하는지.
 // 브라우저가 우리 서버에게 root("/")페이지의 URL이 필요하다고 get request를 보냄
-// 브라우저가 get request를 보내면 get의 두번째 인자인 콜백함수를 실행
-app.get("/", handleHome); // Route. Route란 handler로 URL을 정돈하는 것
-app.get("/login", handleLogin); // Route
+// 그럼 express가 middleware인 두번쨰 인자 함수를 호출 (생략가능)
+// 브라우저가 get request를 보내면 get의 세번째 인자인 콜백함수인 handler=controller를 실행
+// middleware: middle software. 중간에 있는 소프트웨어. middleware는 브라우저가 request한 다음, 서버가 response하기 전. 그 사이에 middleware가 있다
+// middleware는 request에 응답하지 않는다. request를 지속시켜준다.
+// 모든 middleware는 handler=controller고, 모든 handler=controller는 middleware이다.
+// 즉 모든 controller는 middleware가 될 수 있다. middleware함수에서 next()함수를 호출한다면, 그 함수는 middleware라는걸 의미한다
+// get의 세번째인자함수는 middleware실행 뒤에 실행되는 finalware이다
+app.get("/", gossipMiddleware, handleHome); // Route. Route란 handler=controller로 URL을 정돈하는 것
 
 const handleListening = () =>
   console.log(`✅ Server listening on port http://localhost:${PORT} 🚀`);

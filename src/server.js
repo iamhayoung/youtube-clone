@@ -6,8 +6,6 @@ import userRouter from "./routers/userRouter";
 
 const PORT = 4000;
 
-console.log(process.cwd())
-
 const app = express();
 const logger = morgan("dev"); // morgan은 request에 대한 http 상태 코드, 접속 하는데 걸린 시간, 명령어 등 log 자료들을 콘솔에 기록해준다. morgan("dev")를 호출하면 request, response, next를 포함한 middleware를 return 해줌
 

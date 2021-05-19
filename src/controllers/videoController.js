@@ -1,4 +1,4 @@
-export const trending = (req, res) => res.send("Home Page Videos");
+export const trending = (req, res) => res.render("home"); // views/home.pug
 export const see = (req, res) => {
   return res.send(`Watch Video #${req.params.id}`);
 };

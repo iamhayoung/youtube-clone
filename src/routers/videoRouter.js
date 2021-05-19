@@ -1,5 +1,5 @@
 import express from "express";
-import { upload, see, edit, deleteVideo } from "../controllers/videoController";
+import { upload, watch, edit, deleteVideo } from "../controllers/videoController";
 
 const videoRouter = express.Router();
 
@@ -12,7 +12,7 @@ const videoRouter = express.Router();
 // express가 upload라는 글자를 id 파라메터로 인식해버리기 때문
 // (\\d+)는 정규표현. id에 숫자만 들어갈수 있게함
 // 정규 표현을 추가해주면 /upload가 맨밑으로 가도됨. upload는 숫자가 아니기 때문에
-videoRouter.get("/:id(\\d+)", see);
+videoRouter.get("/:id(\\d+)", watch);
 videoRouter.get("/:id(\\d+)/edit", edit);
 videoRouter.get("/:id(\\d+)/delete", deleteVideo);
 videoRouter.get("/upload", upload);

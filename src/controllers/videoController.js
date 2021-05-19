@@ -40,14 +40,14 @@ export const watch = (req, res) => {
   return res.render("watch", { pageTitle: `Watching: ${video.title}`, video });
 }; // views/watch.pug
 
-// getEdit: form을 화면에 보여주는 역할
+// getEdit: form을 화면에 렌더링해주는 역할
 export const getEdit = (req, res) => {
   const { id } = req.params;
   const video = videos[id - 1];
   return res.render("edit", { pageTitle: `Editing: ${video.title}`, video })
 }; // views/edit.pug
 
-// postEdit: 변경사항을 저장해주는 역할
+// postEdit: 비디오에 대한 변경사항을 저장해주는 역할
 export const postEdit = (req, res) => {
 
 };

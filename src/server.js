@@ -14,6 +14,7 @@ const logger = morgan("dev"); // morgan은 request에 대한 http 상태 코드,
 // Express에게 이제부터 사용할 view engine은 pug라고 알려줌. 뷰엔진을 pug로 세팅하는것임
 // 이렇게 세팅하면 Express는 html을 리턴하기 위해 pug를 사용함
 app.set("view engine", "pug");
+app.set("views", process.cwd() + "/src/views"); // Express views의 기본 디렉토리(current working directory)를 /src/views/로 수정
 app.use(logger); // logger()는 middleware를 return해줌
 // Router가 express에게 유저가 root url(use의 첫번쨰 인자)로 시작하는 url에 접근하면
 // Router는 url을 그룹화하는 방법.

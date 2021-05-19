@@ -1,4 +1,9 @@
 extends base.pug
 
 block content
-  h1 Edit Video
+  h4 Change Title of video
+  //- GET method: 구글이나 네이버에서 뭔가 검색할때. 검색어가 URL에 포함됨
+  //- POST method: 파일을 보내거나 데이터베이스에 있는 값을 바꿀 데이터를 보낼때, 웹사이트에 로그인할때 사용
+  form(method="POST")
+    input(name="title" placeholder="Video Title", value=video.title, required)
+    input(value="Save" type="submit")

@@ -27,7 +27,7 @@ let videos = [
 
 // template(base.pug)을 렌더링하는 것은 Controller임.
 // render의 첫번째 인자는 렌더링할 파일의 이름
-// 두번째 인자는 pug template(base.pug)에 보낼 변수임.
+// 두번째 인자는 pug template(base.pug)에 보낼 변수임. object 형태로 보내줘야함
 // 각페이지의 views/base.pug의 pageTitle이라는 값에 들어갈 값을 넣어줌
 export const trending = (req, res) => {
   return res.render("home", { pageTitle: "Home", videos });
@@ -37,10 +37,17 @@ export const watch = (req, res) => {
   const { id } = req.params;
   const video = videos[id - 1];
   console.log(video);
-  return res.render("watch", { pageTitle: `Watching ${video.title}`, video });
+  return res.render("watch", { pageTitle: `Watching: ${video.title}`, video });
 }; // views/watch.pug
-export const edit = (req, res) => res.render("edit"); // views/edit.pug
 
-export const search = (req, res) => res.send("Search");
-export const upload = (req, res) => res.send("Upload");
-export const deleteVideo = (req, res) => res.send("Delete video");
+// getEdit: form을 화면에 보여주는 역할
+export const getEdit = (req, res) => {
+  const { id } = req.params;
+  const video = videos[id - 1];
+  return res.render("edit", { pageTitle: `Editing: ${video.title}`, video })
+}; // views/edit.pug
+
+// postEdit: 변경사항을 저장해주는 역할
+export const postEdit = (req, res) => {
+
+};

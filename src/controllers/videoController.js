@@ -49,7 +49,7 @@ export const getEdit = (req, res) => {
 // postEdit: 비디오에 대한 변경사항을 저장해주는 역할
 export const postEdit = (req, res) => {
   const { id } = req.params;
-  const { title } = req.body;
+  const { title } = req.body; // title은 postEdit의 input의 name임. input에 name값 안넣어주면 req.body에 값이 안잡힘
   videos[id - 1].title = title;
   return res.redirect(`/videos/${id}`); // post로 submit하면 watch페이지로 리다이렉트
 };

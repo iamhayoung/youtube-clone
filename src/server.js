@@ -14,8 +14,8 @@ const logger = morgan("dev"); // morgan은 request에 대한 http 상태 코드,
 app.set("view engine", "pug");
 app.set("views", process.cwd() + "/src/views"); // Express views의 기본 디렉토리(current working directory)를 /src/views/로 수정
 app.use(logger); // logger()는 middleware를 return해줌
-// urlencoded({ extended: true }): Express가 form의 value를 이해할 수 있도록 하고 그 값을 자바스크립트 object형식으로 변형시켜줌(req.body에 form의 value값을 담아줌)
-app.use(express.urlencoded({ extended: true })); // middleware이기 때문에, Router들보다 먼저 실행되게 위에 둬야함
+// urlencoded({ extended: true }): form 데이터를 javascript로 통역해주는 middleware. Express가 form의 value를 이해할 수 있도록 하고 그 값을 자바스크립트 object형식으로 변형시켜줌(req.body에 form의 value값을 담아줌)
+app.use(express.urlencoded({ extended: true })); // middleware이기 때문에, Router들보다 먼저 실행되게 위에 둬야함!!
 // Router가 express에게 유저가 root url(use의 첫번쨰 인자)로 시작하는 url에 접근하면
 // Router는 url을 그룹화하는 방법.
 // express는 2번째인자(globalRouter).get의 안으로 들어감

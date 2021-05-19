@@ -13,7 +13,6 @@ const videoRouter = express.Router();
 // (\\d+)는 정규표현. id에 숫자만 들어갈수 있게함
 // 정규 표현을 추가해주면 /upload가 맨밑으로 가도됨. upload는 숫자가 아니기 때문에
 videoRouter.get("/:id(\\d+)", watch);
-videoRouter.get("/:id(\\d+)/edit", getEdit);
-videoRouter.post("/:id(\\d+)/edit", postEdit);
+videoRouter.route("/:id(\\d+)/edit").get(getEdit).post(postEdit); // 같은 하나의 URL인 route로 get과 post를 사용할때 route()를 이용하면 구문을 압축시킬 수 있음
 
 export default videoRouter;

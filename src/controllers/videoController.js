@@ -35,8 +35,7 @@ export const trending = (req, res) => {
 
 export const watch = (req, res) => {
   const { id } = req.params;
-  const video = videos[id - 1];
-  console.log(video);
+  const video = videos[id - 1]; // 현재 페이지의 videos 배열 정보
   return res.render("watch", { pageTitle: `Watching: ${video.title}`, video });
 }; // views/watch.pug
 
@@ -49,5 +48,8 @@ export const getEdit = (req, res) => {
 
 // postEdit: 비디오에 대한 변경사항을 저장해주는 역할
 export const postEdit = (req, res) => {
-
+  const { id } = req.params;
+  const { title } = req.body;
+  videos[id - 1].title = title;
+  return res.redirect(`/videos/${id}`); // post로 submit하면 watch페이지로 리다이렉트
 };

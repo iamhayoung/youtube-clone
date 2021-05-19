@@ -3,7 +3,32 @@
 // 두번째 인자는 pug template(base.pug)에 보낼 변수임.
 // 각페이지의 views/base.pug의 pageTitle이라는 값에 들어갈 값을 넣어줌
 export const trending = (req, res) => {
-  const videos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const videos = [
+    {
+      title: "First Video",
+      rating: 5,
+      comments: 2,
+      createdAt: "2 minutes ago",
+      views: 59,
+      id: 1
+    },
+    {
+      title: "Second Video",
+      rating: 5,
+      comments: 2,
+      createdAt: "2 minutes ago",
+      views: 59,
+      id: 1
+    },
+    {
+      title: "Third Video",
+      rating: 5,
+      comments: 2,
+      createdAt: "2 minutes ago",
+      views: 59,
+      id: 1
+    },
+  ];
   return res.render("home", { pageTitle: "Home", videos });
 }; // views/home.pug
 export const see = (req, res) => res.render("watch"); // views/watch.pug

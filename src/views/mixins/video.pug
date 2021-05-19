@@ -1,0 +1,9 @@
+//- video: mixin의 이름, info: mixin이 받게 될 데이터
+mixin video(info)
+  div
+    h4=info.title
+    ul
+      li #{info.rating}/5
+      li #{info.comments} comments.
+      li Posted #{info.createdAt}.
+      li #{info.views} views.

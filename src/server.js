@@ -1,12 +1,8 @@
-import "./db"; // db.js파일 자체를 import해줌으로써 내 서버가 mongoDB에 연결될거임
-import "./models/Video"; // db를 import한 후에 model을 import해야함
 import express from "express";
 import morgan from "morgan";
 import globalRouter from "./routers/globalRouter";
 import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
-
-const PORT = 4000;
 
 const app = express();
 const logger = morgan("dev"); // morgan은 request에 대한 http 상태 코드, 접속 하는데 걸린 시간, 명령어 등 log 자료들을 콘솔에 기록해준다. morgan("dev")를 호출하면 request, response, next를 포함한 middleware를 return 해줌
@@ -25,7 +21,4 @@ app.use("/", globalRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);
 
-const handleListening = () =>
-  console.log(`✅ Server listening on http://localhost:${PORT} 🚀`);
-
-app.listen(PORT, handleListening);
+export default app;

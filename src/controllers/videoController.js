@@ -55,7 +55,18 @@ export const getUpload = (req, res) => {
 }; // views/upload.pug
 
 export const postUpload = (req, res) => {
-  // here we will add a video to the videos array
-  const { title } = req.body;
+  const { title, description, hashtags } = req.body;
+  // document는 현재 schema와 같은모양으로 만듦. document는 실제 데이터를 담음. 이 document를 database에 저장해야함
+  const video = new Video({
+    title,
+    description,
+    createdAt: Date.now(),
+    hashtags: hashtags.split(",").map(word => `#${word}`),
+    meta: {
+      views: 0,
+      rating: 0,
+    },
+  })
+  console.log(video);
   return res.redirect("/");
 }; // views/upload.pug

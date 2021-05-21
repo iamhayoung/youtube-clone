@@ -84,12 +84,7 @@ export const postUpload = async (req, res) => {
   const video = new Video({
     title,
     description,
-    createdAt: Date.now(),
     hashtags: hashtags.split(",").map(word => `#${word}`),
-    meta: {
-      views: 0,
-      rating: 0,
-    },
   })
   await video.save();
   // save: document를 database에 넘겨줌. save는 promise를 return해줌. promise는 JS에서 코드를 기다리게함. 즉, database에 기록되고 저장되는데까지 시간이 걸리기 때문에 promise를 리턴함으로써 save작업이 끝날때까지 기다려줘야한다. 그래서 postUpload함수에 async추가, save에 await추가해줌. save는 promise를 return하고 이걸 await하면 document가 return됨

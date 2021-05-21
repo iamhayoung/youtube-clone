@@ -32,9 +32,10 @@ export const home = async (req, res) => {
   return res.render("home", { pageTitle: "Home", videos });
 }; // views/home.pug
 
-export const watch = (req, res) => {
+export const watch = async (req, res) => {
   const { id } = req.params;
-  return res.render("watch", { pageTitle: `Watching` });
+  const video = await Video.findById(id); // id로 video 데이터값을 찾게 해줌
+  return res.render("watch", { pageTitle: video.title, video });
 }; // views/watch.pug
 
 // getEdit: form을 화면에 렌더링해주는 역할

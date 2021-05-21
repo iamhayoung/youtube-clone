@@ -6,4 +6,6 @@ block content
   //- POST method: 데이터가 데이터베이스의 상태를 수정할때. 뭔가를 수정하거나, 추가하거나, 삭제할때. 파일을 보내거나 데이터베이스에 있는 값을 바꿀 데이터를 보낼때, 웹사이트에 로그인할때 사용
   form(method="POST")
     input(name="title" placeholder="Video Title", value=video.title, required)
+    input(name="description" placeholder="Description", value=video.description, required, type="text" minlength=20)
+    input(name="hashtags" placeholder="Hashtags, separated by comma.", value=video.hashtags.join(), required, type="text")
     input(value="Save" type="submit")

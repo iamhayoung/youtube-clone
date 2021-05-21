@@ -34,14 +34,24 @@ export const home = async (req, res) => {
 
 export const watch = async (req, res) => {
   const { id } = req.params;
-  const video = await Video.findById(id); // id로 video 데이터값을 찾게 해줌
+  const video = await Video.findById(id); // findByID(): id로 video 데이터값을 찾게 해줌
+  if (!video) {
+    // 에러가 날 경우 if를 써서 먼저 처리함. 에러체크를 먼저 함으로써 나머지 코드는 에러걱정할 필요없음
+    // 에러처리 if문 안에서는 반드시 return써줘야함. 그래야 함수가 그대로 종료됨
+    return res.render("404", { pageTitle: "Video not found." });
+  }
+  // if 바깥의 코드는 정상적인 경우 실행될것들로 코딩
   return res.render("watch", { pageTitle: video.title, video });
 }; // views/watch.pug
 
 // getEdit: form을 화면에 렌더링해주는 역할
-export const getEdit = (req, res) => {
+export const getEdit = async (req, res) => {
   const { id } = req.params;
-  return res.render("edit", { pageTitle: `Editing` })
+  const video = await Video.findById(id);
+  if (!video) {
+    return res.render("404", { pageTitle: "Video not found." });
+  }
+  return res.render("edit", { pageTitle: `Edit: ${video.title}`, video })
 }; // views/edit.pug
 
 // postEdit: 비디오에 대한 변경사항을 저장해주는 역할

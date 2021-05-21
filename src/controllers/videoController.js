@@ -55,9 +55,19 @@ export const getEdit = async (req, res) => {
 }; // views/edit.pug
 
 // postEdit: 비디오에 대한 변경사항을 저장해주는 역할
-export const postEdit = (req, res) => {
+export const postEdit = async (req, res) => {
   const { id } = req.params;
-  const { title } = req.body; // title은 postEdit의 input의 name임. input에 name값 안넣어주면 req.body에 값이 안잡힘
+  const { title, description, hashtags } = req.body; // title은 postEdit의 input의 name임. input에 name값 안넣어주면 req.body에 값이 안잡힘
+  const video = await Video.findById(id);
+  if (!video) {
+    return res.render("404", { pageTitle: "Video not found." });
+  }
+  video.title = title;
+  video.description = description;
+  video.hashtags = hashtags
+    .split(",")
+    .map(word => word.startsWith("#") ? word : `#${word}`);
+  await video.save(); // 변경된 사항들을 저장
   return res.redirect(`/videos/${id}`); // post로 submit하면 watch페이지로 리다이렉트
 }; // views/edit.pug
 
@@ -90,7 +100,9 @@ export const postUpload = async (req, res) => {
     await Video.create({
       title,
       description,
-      hashtags: hashtags.split(",").map(word => `#${word}`),
+      hashtags: hashtags
+        .split(",")
+        .map(word => word.startsWith("#") ? word : `#${word}`),
     });
     return res.redirect("/");
   } catch (error) {

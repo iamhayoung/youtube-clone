@@ -28,7 +28,7 @@ export const home = async (req, res) => {
   // await를 find앞에 적으면 find는 내가 callback이 필요하지않다는걸 알게됨. 그래서 find는 find operation의 결과값으로 찾아낸 비디오를 바로 출력해줌. async await를 사용할때는 콜백함수 필요없음
   // promise에서는 순서대로 위에서 아래로 코드가 실행됨
   // 에러를 출력하기 위해 try catch문을 사용
-  const videos = await Video.find({});
+  const videos = await Video.find({}); // database에 저장된 video 정보
   return res.render("home", { pageTitle: "Home", videos });
 }; // views/home.pug
 
@@ -54,9 +54,11 @@ export const getUpload = (req, res) => {
   return res.render("upload", { pageTitle: "Upload Video"});
 }; // views/upload.pug
 
-export const postUpload = (req, res) => {
+export const postUpload = async (req, res) => {
   const { title, description, hashtags } = req.body;
+  /*
   // document는 현재 schema와 같은모양으로 만듦. document는 실제 데이터를 담음. 이 document를 database에 저장해야함
+  // document는 Javascript object. 데이터 검증하는것을 도와줌. 올바르지않은 데이터가 저장되지않도록 schema에서 설정된 type과 다른 데이터가 담기면 그 keyごと 사라지고 저장안되게함
   const video = new Video({
     title,
     description,
@@ -67,6 +69,20 @@ export const postUpload = (req, res) => {
       rating: 0,
     },
   })
-  console.log(video);
+  await video.save();
+  // save: document를 database에 넘겨줌. save는 promise를 return해줌. promise는 JS에서 코드를 기다리게함. 즉, database에 기록되고 저장되는데까지 시간이 걸리기 때문에 promise를 리턴함으로써 save작업이 끝날때까지 기다려줘야한다. 그래서 postUpload함수에 async추가, save에 await추가해줌. save는 promise를 return하고 이걸 await하면 document가 return됨
+  await video.save(); // video object를 database에 저장
+  */
+  // create()는 Javascript object를 만들어주는 과정을 안해도됨, 자동적으로 해줌
+  await Video.create({
+    title,
+    description,
+    createdAt: Date.now(),
+    hashtags: hashtags.split(",").map(word => `#${word}`),
+    meta: {
+      views: 0,
+      rating: 0,
+    },
+  });
   return res.redirect("/");
 }; // views/upload.pug

@@ -3,7 +3,6 @@ extends base
 include mixins/video
 
 block content
-  h2 Welcome here you will see the trending videos
   each potato in videos
     //- 불러올 mixin이름이 video. mixin불러올때 앞에 +붙이기. video mixin에 potato를 보냄
     +video(potato)

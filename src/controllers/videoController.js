@@ -22,19 +22,14 @@ console.log("finished")
 */
 export const home = async (req, res) => {
   // await는 async function 안에서만 사용가능
-  try {
-    // find는 mongoose 구문
-    // find의 첫번째 인자: search term. search term이 비어있으면 모든 형식을 찾는다는것을 뜻함
-    // await가 기재된 코드의 행(line)은 javascript가 database로부터 결과값을 받을때 기다려줌
-    // await를 find앞에 적으면 find는 내가 callback이 필요하지않다는걸 알게됨. 그래서 find는 find operation의 결과값으로 찾아낸 비디오를 바로 출력해줌. async await를 사용할때는 콜백함수 필요없음
-    // promise에서는 순서대로 위에서 아래로 코드가 실행됨
-    // 에러를 출력하기 위해 try catch문을 사용
-    const videos = await Video.find({});
-    return res.render("home", { pageTitle: "Home", videos });
-  } catch (error) {
-    // 에러 발생시(database가 꺼졌거나, 연결이 끊겼거나, 사람이 포화상태거나 등) catch로 넘어가서 실행
-    return res.render("server-error");
-  }
+  // find는 mongoose 구문. 모든 비디오를 database에서 불러오는것
+  // find의 첫번째 인자: search term. search term이 비어있으면 모든 형식을 찾는다는것을 뜻함
+  // await가 기재된 코드의 행(line)은 javascript가 database로부터 결과값을 받을때 기다려줌
+  // await를 find앞에 적으면 find는 내가 callback이 필요하지않다는걸 알게됨. 그래서 find는 find operation의 결과값으로 찾아낸 비디오를 바로 출력해줌. async await를 사용할때는 콜백함수 필요없음
+  // promise에서는 순서대로 위에서 아래로 코드가 실행됨
+  // 에러를 출력하기 위해 try catch문을 사용
+  const videos = await Video.find({});
+  return res.render("home", { pageTitle: "Home", videos });
 }; // views/home.pug
 
 export const watch = (req, res) => {

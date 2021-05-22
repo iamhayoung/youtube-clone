@@ -47,6 +47,7 @@ export const watch = async (req, res) => {
 // getEdit: form을 화면에 렌더링해주는 역할
 export const getEdit = async (req, res) => {
   const { id } = req.params;
+  // exists를 못씃고 findById를 써야하는 이유는 video object를 edit template로 보내줘야 하기때문
   const video = await Video.findById(id);
   if (!video) {
     return res.render("404", { pageTitle: "Video not found." });
@@ -58,16 +59,31 @@ export const getEdit = async (req, res) => {
 export const postEdit = async (req, res) => {
   const { id } = req.params;
   const { title, description, hashtags } = req.body; // title은 postEdit의 input의 name임. input에 name값 안넣어주면 req.body에 값이 안잡힘
-  const video = await Video.findById(id);
+  // exists는 인수로 filter(조건)를 받음. exists는 true/false를 리턴함. object의 id가 req.params.id와 같은 경우를 찾음
+  // findById를 안써도 되는 이유는 video object를 template로 안보내줘도 되기때문
+  const video = await Video.exists({ _id: id });
   if (!video) {
     return res.render("404", { pageTitle: "Video not found." });
   }
+  /*
+  const video = await Video.findById(id);
   video.title = title;
   video.description = description;
   video.hashtags = hashtags
     .split(",")
     .map(word => word.startsWith("#") ? word : `#${word}`);
   await video.save(); // 변경된 사항들을 저장
+  */
+
+  // findByIdAndUpdate는 위의 코드를 줄여줌. 첫번째 인수: 업데이트하고자하는 영상의 ID
+  // 두번째 인수: 업데이트할 정보 혹은 내용
+  await Video.findByIdAndUpdate(id, {
+    title,
+    description,
+    hashtags: hashtags
+      .split(",")
+      .map(word => word.startsWith("#") ? word : `#${word}`),
+  });
   return res.redirect(`/videos/${id}`); // post로 submit하면 watch페이지로 리다이렉트
 }; // views/edit.pug
 

@@ -15,6 +15,8 @@ const videoSchema = new mongoose.Schema({
 // mongoose에서는 document에 무슨 일이 생기기 전이나 후에 middleware를 적용할 수 있다
 // 예를 들면 save하기 전,후로 middleware를 적용하거나 function을 실행할수 있다
 // middleware는 무조건 model이 생성되기 전에 만들어야한다!
+// pre: Mongoose에서 middleware를 생성하는 방법중 하나. "save"이벤트가 발생되기 전에 중간에 가로채서 2번째 인수인 함수를 먼저 실행
+// "save"이벤트는 this로 업데이트 하려는 document에 접근이 가능하다
 videoSchema.pre("save", async function () {
   // this는 우리가 저장하고자 하는 document(input에서 입력된 값)를 가리킴
   this.hashtags = this.hashtags[0]

@@ -1,5 +1,7 @@
 # Youtube Clone
 
+Using Node.js, Express, MongoDB, Mongoose.
+
 ## Global Router
 
 Global router의 root router는: /

@@ -17,7 +17,7 @@
   "homepage": "https://github.com/iamhayoung/youtube-clone#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^5.12.10",
+    "mongoose": "^6.0.7",
     "morgan": "^1.10.0",
     "pug": "^3.0.2"
   },

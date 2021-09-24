@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 // schema: shape of model. 실제 데이터는 안넣고 데이터 형식만 정의. 데이터가 어떤 형태로 구성될지 설정해주는것
 const videoSchema = new mongoose.Schema({
@@ -17,16 +17,18 @@ const videoSchema = new mongoose.Schema({
 // middleware는 무조건 model이 생성되기 전에 만들어야한다!
 // pre: Mongoose에서 middleware를 생성하는 방법중 하나. "save"이벤트가 발생되기 전에 중간에 가로채서 2번째 인수인 함수를 먼저 실행
 // "save"이벤트는 this로 업데이트 하려는 document에 접근이 가능하다
+/*
 videoSchema.pre("save", async function () {
   // this는 우리가 저장하고자 하는 document(input에서 입력된 값)를 가리킴
   this.hashtags = this.hashtags[0]
     .split(",")
     .map(word => word.startsWith("#") ? word : `#${word}`);
 });
+*/
 
 // model: 데이터가 어떻게 생겼는지 데이터베이스에게 설명해줌. title이 string인지, 배열인지, 숫자인지...
 // model의 첫번째 인자: model의 이름
 // 두번쨰 인자: 데이터의 형태인 schema
-const Video = mongoose.model("Video", videoSchema);
+const Video = mongoose.model('Video', videoSchema);
 
 export default Video;

@@ -1,4 +1,4 @@
-import Video from "../models/Video";
+import Video from '../models/Video';
 
 // template(base.pug)을 렌더링하는 것은 Controller임.
 // render의 첫번째 인자는 렌더링할 파일의 이름
@@ -29,7 +29,7 @@ export const home = async (req, res) => {
   // promise에서는 순서대로 위에서 아래로 코드가 실행됨
   // 에러를 출력하기 위해 try catch문을 사용
   const videos = await Video.find({}); // database에 저장된 video 정보
-  return res.render("home", { pageTitle: "Home", videos });
+  return res.render('home', { pageTitle: 'Home', videos });
 }; // views/home.pug
 
 export const watch = async (req, res) => {
@@ -38,10 +38,10 @@ export const watch = async (req, res) => {
   if (!video) {
     // 에러가 날 경우 if를 써서 먼저 처리함. 에러체크를 먼저 함으로써 나머지 코드는 에러걱정할 필요없음
     // 에러처리 if문 안에서는 반드시 return써줘야함. 그래야 함수가 그대로 종료됨
-    return res.render("404", { pageTitle: "Video not found." });
+    return res.render('404', { pageTitle: 'Video not found.' });
   }
   // if 바깥의 코드는 정상적인 경우 실행될것들로 코딩
-  return res.render("watch", { pageTitle: video.title, video });
+  return res.render('watch', { pageTitle: video.title, video });
 }; // views/watch.pug
 
 // getEdit: form을 화면에 렌더링해주는 역할
@@ -50,9 +50,9 @@ export const getEdit = async (req, res) => {
   // exists를 못씃고 findById를 써야하는 이유는 video object를 edit template로 보내줘야 하기때문
   const video = await Video.findById(id);
   if (!video) {
-    return res.render("404", { pageTitle: "Video not found." });
+    return res.render('404', { pageTitle: 'Video not found.' });
   }
-  return res.render("edit", { pageTitle: `Edit: ${video.title}`, video })
+  return res.render('edit', { pageTitle: `Edit: ${video.title}`, video });
 }; // views/edit.pug
 
 // postEdit: 비디오에 대한 변경사항을 저장해주는 역할
@@ -63,7 +63,7 @@ export const postEdit = async (req, res) => {
   // findById를 안써도 되는 이유는 video object를 template로 안보내줘도 되기때문
   const video = await Video.exists({ _id: id });
   if (!video) {
-    return res.render("404", { pageTitle: "Video not found." });
+    return res.render('404', { pageTitle: 'Video not found.' });
   }
   /*
   const video = await Video.findById(id);
@@ -81,15 +81,15 @@ export const postEdit = async (req, res) => {
     title,
     description,
     hashtags: hashtags
-      .split(",")
-      .map(word => word.startsWith("#") ? word : `#${word}`),
+      .split(',')
+      .map((word) => (word.startsWith('#') ? word : `#${word}`)),
   });
   return res.redirect(`/videos/${id}`); // post로 submit하면 watch페이지로 리다이렉트
 }; // views/edit.pug
 
 // videos/upload페이지 첫실행, postUpload에서 업로드 에러없을때 실행
 export const getUpload = (req, res) => {
-  return res.render("upload", { pageTitle: "Upload Video" });
+  return res.render('upload', { pageTitle: 'Upload Video' });
 }; // views/upload.pug
 
 export const postUpload = async (req, res) => {
@@ -113,13 +113,13 @@ export const postUpload = async (req, res) => {
       description,
       hashtags,
     });
-    return res.redirect("/");
+    return res.redirect('/');
   } catch (error) {
     // catch를 통해 에러를 잡아내도 뭔가를 return해줘야함
     // error메시지를 upload template로 보내서 에러나면 에러메시지와 함께 upload페이지 렌더링
-    return res.render("upload", {
-      pageTitle: "Upload Video",
-      errorMessage: error._message
+    return res.render('upload', {
+      pageTitle: 'Upload Video',
+      errorMessage: error._message,
     });
   }
 }; // views/upload.pug

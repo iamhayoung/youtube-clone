@@ -80,9 +80,7 @@ export const postEdit = async (req, res) => {
   await Video.findByIdAndUpdate(id, {
     title,
     description,
-    hashtags: hashtags
-      .split(',')
-      .map((word) => (word.startsWith('#') ? word : `#${word}`)),
+    hashtags: Video.formatHashtags(hashtags), // 'formatHashtags'라는 이름의 static function을 사용
   });
   return res.redirect(`/videos/${id}`); // post로 submit하면 watch페이지로 리다이렉트
 }; // views/edit.pug
@@ -111,7 +109,7 @@ export const postUpload = async (req, res) => {
     await Video.create({
       title,
       description,
-      hashtags,
+      hashtags: Video.formatHashtags(hashtags), // 'formatHashtags'라는 이름의 static function을 사용
     });
     return res.redirect('/');
   } catch (error) {

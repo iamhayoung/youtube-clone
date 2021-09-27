@@ -26,6 +26,14 @@ videoSchema.pre("save", async function () {
 });
 */
 
+// mongoose에서 제공하는 Schema.static 메소드로 static function(커스텀 함수)을 생성
+// 컨트롤러에서 커스텀 함수를 사용하기 위해 import를 해줄 필요가 없음! 모델을 import하면 그안에 정의되어 있기 때문
+videoSchema.static('formatHashtags', function (hashtags) {
+  return hashtags
+    .split(',')
+    .map((word) => (word.startsWith('#') ? word : `#${word}`));
+});
+
 // model: 데이터가 어떻게 생겼는지 데이터베이스에게 설명해줌. title이 string인지, 배열인지, 숫자인지...
 // model의 첫번째 인자: model의 이름
 // 두번쨰 인자: 데이터의 형태인 schema

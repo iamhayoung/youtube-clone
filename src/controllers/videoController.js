@@ -128,3 +128,21 @@ export const deleteVideo = async (req, res) => {
 
   return res.redirect('/');
 };
+
+export const search = async (req, res) => {
+  const { keyword } = req.query;
+  let videos = [];
+
+  if (keyword) {
+    videos = await Video.find({
+      title: {
+        // $regex는 몽고디비 메소드
+        $regex: new RegExp(keyword, 'i'), // <- 'keyword'가 포함contain되는 값만을 찾음. g: Global, i: 대소문자 무시(ignore)
+        // $regex: new RegExp(`^${keyword}`, 'i'), // <- ^: 'keyword'로 시작되는 값만을 찾음. g: Global, i: 대소문자 무시(ignore)
+        // $regex: new RegExp(`${keyword}$`, 'i'), // <- $: 'keyword'로 끝나는 값만을 찾음. g: Global, i: 대소문자 무시(ignore)
+      },
+    });
+  }
+
+  return res.render('search', { pageTitle: 'Search Video', videos });
+};

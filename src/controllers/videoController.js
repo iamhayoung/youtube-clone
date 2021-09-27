@@ -28,7 +28,7 @@ export const home = async (req, res) => {
   // await를 find앞에 적으면 find는 내가 callback이 필요하지않다는걸 알게됨. 그래서 find는 find operation의 결과값으로 찾아낸 비디오를 바로 출력해줌. async await를 사용할때는 콜백함수 필요없음
   // promise에서는 순서대로 위에서 아래로 코드가 실행됨
   // 에러를 출력하기 위해 try catch문을 사용
-  const videos = await Video.find({}); // database에 저장된 video 정보
+  const videos = await Video.find({}).sort({ createdAt: 'desc' }); // database에 저장된 video 정보. sort로 정렬 설정 가능
   return res.render('home', { pageTitle: 'Home', videos });
 }; // views/home.pug
 

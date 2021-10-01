@@ -38,7 +38,10 @@ export const postJoin = async (req, res) => {
     await User.create({ email, username, password, name, location });
     return res.redirect('/login');
   } catch (error) {
-    console.log(error);
+    return res.status(400).render('join', {
+      pageTitle: 'Join',
+      errorMessage: error._message,
+    });
   }
 };
 export const edit = (req, res) => res.send('Edit');

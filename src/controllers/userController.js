@@ -73,7 +73,7 @@ export const postLogin = async (req, res) => {
     });
   }
 
-  // 로그인 성공시 세션에 정보 추가
+  // 로그인 성공시 세션 스토어(세션 오브젝트)에 정보 추가
   req.session.loggedIn = true; // 로그인 플래그
   req.session.user = user; // DB로부터 찾은 유저정보
   return res.redirect('/');

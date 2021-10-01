@@ -50,7 +50,7 @@ export const getEdit = async (req, res) => {
   // exists를 못씃고 findById를 써야하는 이유는 video object를 edit template로 보내줘야 하기때문
   const video = await Video.findById(id);
   if (!video) {
-    return res.render('404', { pageTitle: 'Video not found.' });
+    return res.status(404).render('404', { pageTitle: 'Video not found.' });
   }
   return res.render('edit', { pageTitle: `Edit: ${video.title}`, video });
 }; // views/edit.pug
@@ -63,7 +63,7 @@ export const postEdit = async (req, res) => {
   // findById를 안써도 되는 이유는 video object를 template로 안보내줘도 되기때문
   const video = await Video.exists({ _id: id });
   if (!video) {
-    return res.render('404', { pageTitle: 'Video not found.' });
+    return res.status(404).render('404', { pageTitle: 'Video not found.' });
   }
   /*
   const video = await Video.findById(id);
@@ -115,7 +115,7 @@ export const postUpload = async (req, res) => {
   } catch (error) {
     // catch를 통해 에러를 잡아내도 뭔가를 return해줘야함
     // error메시지를 upload template로 보내서 에러나면 에러메시지와 함께 upload페이지 렌더링
-    return res.render('upload', {
+    return res.status(400).render('upload', {
       pageTitle: 'Upload Video',
       errorMessage: error._message,
     });

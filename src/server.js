@@ -1,6 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
-import globalRouter from './routers/globalRouter';
+import rootRouter from './routers/rootRouter';
 import videoRouter from './routers/videoRouter';
 import userRouter from './routers/userRouter';
 
@@ -16,8 +16,8 @@ app.use(logger); // logger()는 middleware를 return해줌
 app.use(express.urlencoded({ extended: true })); // middleware이기 때문에, Router들보다 먼저 실행되게 위에 둬야함!!
 // Router가 express에게 유저가 root url(use의 첫번쨰 인자)로 시작하는 url에 접근하면
 // Router는 url을 그룹화하는 방법.
-// express는 2번째인자(globalRouter).get의 안으로 들어감
-app.use('/', globalRouter);
+// express는 2번째인자(rootRouter).get의 안으로 들어감
+app.use('/', rootRouter);
 app.use('/videos', videoRouter);
 app.use('/users', userRouter);
 

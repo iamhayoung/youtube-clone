@@ -4,6 +4,7 @@ import session from 'express-session';
 import rootRouter from './routers/rootRouter';
 import videoRouter from './routers/videoRouter';
 import userRouter from './routers/userRouter';
+import { localsMiddleware } from './middlewares';
 
 const app = express();
 const logger = morgan('dev'); // morgan은 request에 대한 http 상태 코드, 접속 하는데 걸린 시간, 명령어 등 log 자료들을 콘솔에 기록해준다. morgan("dev")를 호출하면 request, response, next를 포함한 middleware를 return 해줌
@@ -52,25 +53,26 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  // 헤더안에 쿠키가 있음. 브라우저를 새로고침할때마다(요청을 보낼때마다) 백엔드에서 쿠키를 받게됨
-  console.log(req.headers);
-  next();
-});
+// app.use((req, res, next) => {
+//   // 헤더안에 쿠키가 있음. 브라우저를 새로고침할때마다(요청을 보낼때마다) 백엔드에서 쿠키를 받게됨
+//   console.log(req.headers);
+//   next();
+// });
 
-app.use((req, res, next) => {
-  req.sessionStore.all((error, sessions) => {
-    // 백엔드가 기억하고 있는 sessions(=유저)와 세션(유저)의 ID를 콘솔로그함!
-    console.log(sessions);
-    next();
-  });
-});
+// app.use((req, res, next) => {
+//   req.sessionStore.all((error, sessions) => {
+//     // 백엔드가 기억하고 있는 sessions(=유저)와 세션(유저)의 모든 ID를 콘솔로그함!
+//     console.log(sessions);
+//     next();
+//   });
+// });
 
 app.get('/add-one', (req, res, next) => {
   req.session.potato += 1;
   return res.send(`${req.session.id}\n${req.session.potato}`);
 });
 
+app.use(localsMiddleware);
 app.use('/', rootRouter);
 app.use('/videos', videoRouter);
 app.use('/users', userRouter);

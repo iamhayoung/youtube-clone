@@ -1,5 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
+import session from 'express-session';
 import rootRouter from './routers/rootRouter';
 import videoRouter from './routers/videoRouter';
 import userRouter from './routers/userRouter';
@@ -17,6 +18,59 @@ app.use(express.urlencoded({ extended: true })); // middleware이기 때문에, 
 // Router가 express에게 유저가 root url(use의 첫번쨰 인자)로 시작하는 url에 접근하면
 // Router는 url을 그룹화하는 방법.
 // express는 2번째인자(rootRouter).get의 안으로 들어감
+
+// 세션: 백엔드와 브라우저 간에 어떤 활동을 했는지 기억하는 것. 브라우저와 백엔드 사이의 memory, history 같은것
+// 예를 들어 노마드 코더에 로그인이 되어있다면 현재 사용하고 있는 브라우저와 니코가 만든 백엔드 사이에 세션이 존재하는 것임.
+// 하지만 2주 정도 후에는 이 세션이 사라질것임. 그러면 다시 로그인을 해야함
+// 세션이 작동하려면 백엔드와 브라우저가 서로에 대한 정보를 가지고 있어야함.
+// 왜냐면 로그인 페이지에서 HTTP 요청을 하면, 요청이 처리되고 끝나게 되는데 그이후로는 백엔드가 아무것도 할수가 없다!
+// 백엔드와 브라우저 모두 아무것도 하지 못함. 예를 들어, Home 화면으로 이동하면 GET 요청을 보내게 되는데, 백엔드가 HTML을 render하고 나면 연결이 그대로 끝나버림. 연결이 계속 유지되지 않음. 계속 연결이 유지되어 있는 WIFI랑은 다름.
+// 요청을 받고, 처리를 끝내면 서버에서는 누가 요청을 보냈는지 잊어버리게 되고 브라우저도 마찬가지로 잊어버리게 됨. 서버가 더이상 필요없으니까.
+// 이러한 것을 stateless(무상태)라고 함! 한번 연결되었다가 끝나는 것임. 이 둘 사이 연결에 state가 없는 것임. 한번 연결하고 끝나는것임
+// 그래서 우리는 유저에게 어떠한 정보를 남겨줘야함. 유저가 백엔드에 뭔가 요청할 때마다 누가 요청하는지 알 수 있도록.
+// 그래서 유저가 로그인할때마다 유저에게 뭔가 줄거임. 조그만한 텍스트 같은것을 줄거임. 이게 너의 텍스트니까 잘 가지고 있으라고 알려주고
+// 유저가 우리한테 요청을 보낼때마다, 그 텍스트를 같이 보내달라고 할거임. 그러면 백엔드는 유저가 누군지 알게 되고 그 유저의 정보를 제공하게됨
+// 중요한것은 유저가 로그인할 때 유저에게 어떠한 텍스트를 준다는 것!
+
+// express-session: 미들웨어. express에서 세션을 처리할수 있게 해줌. 이 미들웨어가 사이트로 들어오는 모든 유저에게 자동으로 세션 아이디를 부여해서 기억하게 함. 브라우저는 쿠키에 그 세션 아이디를 저장하고, express에서도 그 세션을 세션 DB(object)에 저장함
+// 로그인하지 않았어도 기억하게 함! 들어온 사람(브라우저)에게 어떤 텍스트를 보내고, 그 텍스트를 가지고 유저가 누구인지 알아낼거임.
+// 그래서 서버가 브라우저를 개별적으로 기억할 수 있게 함
+// 그 텍스트는 브라우저 개발자도구-application-cookies-connect.sid에서 볼수있음. 즉 백엔드의 메모리에 세션을 저장할수있는 db가 생긴거임
+// 브라우저를 새로고침할때마다, 백엔드에 요청을 보낼때마다 브라우저 개발자도구-application-cookies-connect.sid의 값이 백엔드로 함께 보내질거임
+// 브라우저가 알아서 백엔드로 쿠키를 보내도록 되어있음
+// 서버를 재시작하면, 세션이 사라지게됨. express가 세션을 메모리에 저장하고 있기 때문. 그래서 서버를 재시작할때마다 세션이 사라짐
+// 백엔드가 세션을 잊지않도록 세션을 몽고디비와 연결할거임
+// 즉 세션과 세션 ID는 브라우저를 기억하는 방식 중 하나임. 브라우저와 백엔드 사이에는 와이파이처럼 유지되는 연결이 없으니까 백엔드에 요청을 보낼때마다 이 ID를 같이 보내줘야함. 그러면 백엔드가 ID를 기억할 수 있음.
+// 그리고 이 세션 ID를 가지고 있으면 세션 object=일종의 세션 DB에 정보를 추가할 수 있음(아래 sessionstore 미들웨어)
+// 그래서 DB에 이 세션을 위한 정보를 넣을 수 있음.
+app.use(
+  session({
+    // secret: 말 그대로 아무도 모르는 문자열로 쓸거임
+    secret: 'Hello!',
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+
+app.use((req, res, next) => {
+  // 헤더안에 쿠키가 있음. 브라우저를 새로고침할때마다(요청을 보낼때마다) 백엔드에서 쿠키를 받게됨
+  console.log(req.headers);
+  next();
+});
+
+app.use((req, res, next) => {
+  req.sessionStore.all((error, sessions) => {
+    // 백엔드가 기억하고 있는 sessions(=유저)와 세션(유저)의 ID를 콘솔로그함!
+    console.log(sessions);
+    next();
+  });
+});
+
+app.get('/add-one', (req, res, next) => {
+  req.session.potato += 1;
+  return res.send(`${req.session.id}\n${req.session.potato}`);
+});
+
 app.use('/', rootRouter);
 app.use('/videos', videoRouter);
 app.use('/users', userRouter);

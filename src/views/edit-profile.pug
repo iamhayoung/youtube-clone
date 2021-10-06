@@ -1,0 +1,12 @@
+extends base.pug
+
+block content
+  h4=pageTitle
+  form(method="POST")
+    label(for="avatar") Avatar
+    input(type="file", id="avatar", name="avatar", accept="image/*")
+    input(type="text", name="name", placeholder="Name", required, value=user.name)
+    input(type="email", name="email", placeholder="Email", required, value=user.email)
+    input(type="text", name="username", placeholder="Username", required, value=user.username)
+    input(type="text", name="location", placeholder="Location", required, value=user.location)
+    input(type="submit", value="Update Profile")

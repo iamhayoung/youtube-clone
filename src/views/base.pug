@@ -12,9 +12,9 @@ html(lang="ko")
             a(href="/") Home
           if loggedIn
             li
-              a(href="/logout") Log out
+              a(href="/users/edit") Edit Profile
             li
-              a(href="/my-profile") #{loggedInUser.name}의 Profile
+              a(href="/logout") Log out
           else
             li
               a(href="/login") Login

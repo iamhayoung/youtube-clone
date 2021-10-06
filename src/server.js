@@ -1,6 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import rootRouter from './routers/rootRouter';
 import videoRouter from './routers/videoRouter';
 import userRouter from './routers/userRouter';
@@ -55,6 +56,10 @@ app.use(
     secret: 'Hello!',
     resave: true,
     saveUninitialized: true,
+    // connect-mongo.MongoStore: 세션을 서버가 아닌 몽고디비에 저장. 서버는 재시작할때마다 메모리가 지워지기 때문에 로그인했던 사용자를 기억할 수 없음. 따라서 세션을 database에 저장시켜서 누구가 로그인 되어있어도 상태를 잊어버리지 않음.
+    store: MongoStore.create({
+      mongoUrl: 'mongodb://127.0.0.1:27017/youtube-clone',
+    }),
   })
 );
 

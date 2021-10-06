@@ -52,16 +52,21 @@ app.use(express.urlencoded({ extended: true })); // middleware이기 때문에, 
 // 그래서 DB에 이 세션을 위한 정보를 넣을 수 있음.
 app.use(
   session({
-    // secret: 말 그대로 아무도 모르는 문자열로 쓸거임
-    secret: 'Hello!',
+    secret: process.env.COOKIE_SECRET, // secret: 우리가 쿠키에 sign할때 사용하는 string. 이 string을 가지고 쿠키를 sign하고 우리가 만든 것임을 증명할 수 있다.
     resave: false, // 모든 request마다 기존에 있던 session에 아무런 변경사항이 없을 시에도 그 session을 다시 저장하는 옵션
     saveUninitialized: false, // uninitialized: request가 들어오면 해당 request에서 새로 생성된 session에 아무런 작업이 이루어지지 않은 상황. saveUninitialized는 uninitialized 상태의 session을 강제로 저장함. 따라서 아무 내용 없는 session이 계속해서 저장될 수 있습니다. 그래서 false로 두어서 로그인했을떄(세션 초기화될때) 세션을 저장시킴
     // connect-mongo.MongoStore: 세션을 서버가 아닌 몽고디비에 저장. 서버는 재시작할때마다 메모리가 지워지기 때문에 로그인했던 사용자를 기억할 수 없음. 따라서 세션을 database에 저장시켜서 누구가 로그인 되어있어도 상태를 잊어버리지 않음.
     store: MongoStore.create({
-      mongoUrl: 'mongodb://127.0.0.1:27017/youtube-clone',
+      mongoUrl: process.env.DB_URL,
     }),
   })
 );
+
+// 쿠키
+// secret: 우리가 쿠키에 sign할때 사용하는 string. 이 string을 가지고 쿠키를 sign하고 우리가 만든 것임을 증명할 수 있다.
+// domain: 이 쿠키를 만든 백엔드가 누구인지 알려줌. 브라우저는 domain에 따라 쿠키를 저장하도록 되어있음. 그리고 쿠키는 domain에 있는 백엔드로만 전송됨
+// Expires: 값이 session일 경우는 쿠키의 만료날짜가 명시되지 않은것. 만료날짜를 지정하지 않으면 session cookie로 설정되고 사용자가 닫으면 session cookie는 사라지게됨
+// Max-age: 말그대로 언제 세션이 만료되는지 알려줌. 이 시간이 지나면 쿠키가 사라짐. 로그아웃됨
 
 // app.use((req, res, next) => {
 //   // 헤더안에 쿠키가 있음. 브라우저를 새로고침할때마다(요청을 보낼때마다) 백엔드에서 쿠키를 받게됨

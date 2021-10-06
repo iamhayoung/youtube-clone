@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import './db'; // db.js파일 자체를 import해줌으로써 내 서버가 mongoDB에 연결될거임
 import './models/Video'; // db를 import한 후에 model을 import해야함
 import './models/User'; // db를 import한 후에 model을 import해야함

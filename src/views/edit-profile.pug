@@ -2,7 +2,7 @@ extends base.pug
 
 block content
   h4=pageTitle
-  form(method="POST")
+  form(method="POST", enctype="multipart/form-data")
     label(for="avatar") Avatar
     input(type="file", id="avatar", name="avatar", accept="image/*")
     input(type="text", name="name", placeholder="Name", required, value=user.name)

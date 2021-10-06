@@ -1,3 +1,5 @@
+import multer from 'multer';
+
 export const localsMiddleware = (req, res, next) => {
   // res.locals는 global 전역변수임. 어느 templates에서도 접근 가능
   // pug는 res.locals에 그냥 접근할 수 있음! 그래서 locals에 담긴 정보를 #{}로 사용할 수 있음
@@ -17,3 +19,9 @@ export const protectorMiddleware = (req, res, next) => {
     return res.redirect('/login');
   }
 };
+
+export const uploadFiles = multer({
+  // 사용자로부터 파일을 받으면, 그 파일을 어딘가 넣어야함
+  // multer가 사용자가 업로드하는 모든 파일들을 받아서 우리 서버의 uploads 폴더에 저장
+  dest: 'uploads/',
+});

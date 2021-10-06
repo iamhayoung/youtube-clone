@@ -54,8 +54,8 @@ app.use(
   session({
     // secret: 말 그대로 아무도 모르는 문자열로 쓸거임
     secret: 'Hello!',
-    resave: true,
-    saveUninitialized: true,
+    resave: false, // 모든 request마다 기존에 있던 session에 아무런 변경사항이 없을 시에도 그 session을 다시 저장하는 옵션
+    saveUninitialized: false, // uninitialized: request가 들어오면 해당 request에서 새로 생성된 session에 아무런 작업이 이루어지지 않은 상황. saveUninitialized는 uninitialized 상태의 session을 강제로 저장함. 따라서 아무 내용 없는 session이 계속해서 저장될 수 있습니다. 그래서 false로 두어서 로그인했을떄(세션 초기화될때) 세션을 저장시킴
     // connect-mongo.MongoStore: 세션을 서버가 아닌 몽고디비에 저장. 서버는 재시작할때마다 메모리가 지워지기 때문에 로그인했던 사용자를 기억할 수 없음. 따라서 세션을 database에 저장시켜서 누구가 로그인 되어있어도 상태를 잊어버리지 않음.
     store: MongoStore.create({
       mongoUrl: 'mongodb://127.0.0.1:27017/youtube-clone',

@@ -7,6 +7,5 @@ export const localsMiddleware = (req, res, next) => {
   res.locals.siteName = 'Youtube Clone';
   res.locals.loggedIn = Boolean(req.session.loggedIn); // 값이 false이거나 undefined일수도 있으니 Boolean을 사용해서 이 값이 true이거나 false인지 확인
   res.locals.loggedInUser = req.session.user;
-  console.log('z', res.locals);
   next();
 };

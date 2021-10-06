@@ -92,6 +92,7 @@ export const getUpload = (req, res) => {
 
 export const postUpload = async (req, res) => {
   const { title, description, hashtags } = req.body;
+  const { path: fileUrl } = req.file;
   /*
   // document는 현재 schema와 같은모양으로 만듦. document는 실제 데이터를 담음. 이 document를 database에 저장해야함
   // document는 Javascript object. 데이터 검증하는것을 도와줌. 올바르지않은 데이터가 저장되지않도록 schema에서 설정된 type과 다른 데이터가 담기면 그 keyごと 사라지고 저장안되게함
@@ -109,6 +110,7 @@ export const postUpload = async (req, res) => {
     await Video.create({
       title,
       description,
+      fileUrl,
       hashtags: Video.formatHashtags(hashtags), // 'formatHashtags'라는 이름의 static function을 사용
     });
     return res.redirect('/');

@@ -6,7 +6,7 @@ import {
   remove,
   see,
 } from '../controllers/userController';
-import { protectorMiddleware, uploadFiles } from '../middlewares';
+import { protectorMiddleware, avatarUpload } from '../middlewares';
 
 const userRouter = express.Router();
 
@@ -16,8 +16,8 @@ userRouter
   .route('/edit')
   .all(protectorMiddleware)
   .get(getEdit)
-  // multer uploadFiles 미들웨어가 input name avatar의 파일을 받아서 그 파일을 uploads 폴더에 저장한 다음, postEdit으로 전달함
-  .post(uploadFiles.single('avatar'), postEdit); // single: 하나의 파일만 업로드, input name avatar의 파일을 업로드
+  // multer avatarUpload 미들웨어가 input name avatar의 파일을 받아서 그 파일을 uploads 폴더에 저장한 다음, postEdit으로 전달함
+  .post(avatarUpload.single('avatar'), postEdit); // single: 하나의 파일만 업로드, input name avatar의 파일을 업로드
 userRouter.get('/remove', remove);
 userRouter.get('/:id', see);
 

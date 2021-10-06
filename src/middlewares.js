@@ -20,9 +20,22 @@ export const protectorMiddleware = (req, res, next) => {
   }
 };
 
-export const uploadFiles = multer({
+export const avatarUpload = multer({
   // DB에는 절!대! 파일을 저장하지 않는다. 대신 DB에는 그 파일의 path만 저장하는 것임!
   // 사용자로부터 파일을 받으면, 그 파일을 어딘가 넣어야함
   // multer가 사용자가 업로드하는 모든 파일들을 받아서 우리 서버의 uploads 폴더에 저장
-  dest: 'uploads/',
+  dest: 'uploads/avatars',
+  limits: {
+    fileSize: 3000,
+  },
+});
+
+export const videoUpload = multer({
+  // DB에는 절!대! 파일을 저장하지 않는다. 대신 DB에는 그 파일의 path만 저장하는 것임!
+  // 사용자로부터 파일을 받으면, 그 파일을 어딘가 넣어야함
+  // multer가 사용자가 업로드하는 모든 파일들을 받아서 우리 서버의 uploads 폴더에 저장
+  dest: 'uploads/videos',
+  limits: {
+    fileSize: 10000000,
+  },
 });

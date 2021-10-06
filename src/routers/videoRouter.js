@@ -7,6 +7,7 @@ import {
   postUpload,
   deleteVideo,
 } from '../controllers/videoController';
+import { videoUpload } from '../middlewares';
 
 const videoRouter = express.Router();
 
@@ -22,6 +23,9 @@ const videoRouter = express.Router();
 videoRouter.get('/:id([0-9a-f]{24})', watch);
 videoRouter.route('/:id([0-9a-f]{24})/edit').get(getEdit).post(postEdit); // 같은 하나의 URL인 route로 get과 post를 사용할때 route()를 이용하면 구문을 압축시킬 수 있음
 videoRouter.get('/:id([0-9a-f]{24})/delete', deleteVideo);
-videoRouter.route('/upload').get(getUpload).post(postUpload);
+videoRouter
+  .route('/upload')
+  .get(getUpload)
+  .post(videoUpload.single('video'), postUpload);
 
 export default videoRouter;

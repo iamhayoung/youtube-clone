@@ -87,16 +87,17 @@ export const getEdit = (req, res) => {
 export const postEdit = async (req, res) => {
   const {
     session: {
-      user: { _id },
+      user: { _id, avatarUrl },
     },
-    body: { avatar, name, email, username, location },
+    body: { name, email, username, location },
     file,
   } = req;
+  // DB에는 절!대! 파일을 저장하지 않는다. 대신 DB에는 그 파일의 path만 저장하는 것임!
 
   const updatedUser = await User.findByIdAndUpdate(
     _id,
     {
-      avatar,
+      avatarUrl: file ? file.path : avatarUrl,
       name,
       email,
       username,

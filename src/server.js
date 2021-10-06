@@ -88,6 +88,7 @@ app.get('/add-one', (req, res, next) => {
 });
 
 app.use(localsMiddleware);
+app.use('/uploads', express.static('uploads')); // uploads 폴더를 노출시킴
 app.use('/', rootRouter);
 app.use('/videos', videoRouter);
 app.use('/users', userRouter);
